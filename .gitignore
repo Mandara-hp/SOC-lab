@@ -1,0 +1,44 @@
+# Secrets — NEVER commit
+.env
+*.env
+!.env.example
+*.key
+*.pem
+credentials*
+secrets*
+
+# Datasets (large, re-downloadable)
+datasets/
+*.jsonl
+!**/sample.jsonl        # small committed samples are allowed
+*.cap
+*.pcap
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# VM / lab artefacts (never commit VM images or ISOs)
+*.iso
+*.vmdk
+*.vmwarevm/
+*.vmx*
+*.utm/
+
+# Evidence that may be large/binary — keep screenshots small, exclude recordings
+*.mov
+*.mp4
+*.zip
+
+# OS cruft
+.DS_Store
+Thumbs.db
+*.swp
