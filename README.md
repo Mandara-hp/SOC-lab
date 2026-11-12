@@ -1,43 +1,97 @@
-# soc-lab
+# SIEM & Detection Engineering Lab
 
-A build-it-yourself Security Operations Center lab and detection-engineering portfolio, running entirely on an Apple Silicon (ARM64) MacBook, plus a free cloud track for Microsoft KQL / Sentinel.
+A home security-operations lab that builds a working **SIEM**, instruments a **Windows endpoint** with security telemetry, and ships **10 MITRE ATT&CK–mapped detection rules** — each one triggered with a benign simulation of the real technique and validated firing.
 
-This repo is **two things at once**:
+Built end-to-end on a single Apple-Silicon laptop using virtualised, isolated infrastructure. The goal: demonstrate the full detection-engineering loop — **visibility → collection → detection → triage** — the way a real SOC operates.
 
-1. **A learning programme.** Twelve phases that take you from an empty laptop to someone who can stand up a SIEM, write and prove detections, automate SOC work in Python, and talk about all of it in an interview. The guide never hands you finished code for the things you're supposed to learn — it hands you a spec, tests, and a hint ladder.
-2. **A portfolio.** By the end this repo contains working detections, Python tools with tests and CI, and incident write-ups. It is the artefact you link on your CV.
+> **Status:** SIEM live, endpoint instrumented, 10 detections built, documented, and version-controlled. Python tooling and cloud/Sentinel coverage on the roadmap.
 
-## Start here
+---
 
-Read [`guide/00-overview.md`](guide/00-overview.md). It explains how the guide works, the lab architecture, the disk budget, and how the Python track ramps from beginner to advanced. Then do the phases in order.
+## What's in here
 
-## Repo layout
+- A **detection suite** of 10 rules across 6 ATT&CK tactics, as re-importable Elastic rules **and** a readable catalog → [`detections/`](detections/)
+- Reproducible, documented **infrastructure** (VMs, networking, Elastic stack, endpoint telemetry)
+- An attacker-vs-defender approach: every sensor and rule is framed by *"what does this catch, and how would an attacker evade it?"*
+
+---
+
+## Architecture
 
 ```
-soc-lab/
-├── README.md                 ← you are here
-├── guide/                    ← the programme, one file per phase
-│   ├── 00-overview.md
-│   ├── phase-00-foundations.md
-│   ├── phase-01-telemetry.md
-│   └── ...                    (phases 02–12 added as you progress)
-├── infra/                    ← lab infrastructure (configs YOU fill in)
-│   ├── fusion/               ← VM notes, network design
-│   ├── elastic/              ← docker-compose, agent policies
-│   └── windows/              ← Sysmon config, audit policy, GPO notes
-├── detections/               ← your detection rules (Sigma + Elastic)
-├── tools/                    ← your Python tools (one package per phase)
-├── writeups/                 ← your incident reports and lab notes
-├── datasets/                 ← downloaded attack datasets (gitignored)
-└── evidence/                 ← screenshots / exports proving each phase
+                 MacBook (host, Apple Silicon)
+                 │
+     ┌───────────┴───────────────────────────────┐
+     │  VMware Fusion (isolated virtual lab)       │
+     │                                             │
+     │   ┌─────────────────┐    ┌───────────────┐ │
+     │   │  SIEM VM (Linux) │   │  Endpoint VM   │ │
+     │   │                 │    │  (Windows 11)  │ │
+     │   │  Elasticsearch  │◄───┤  Elastic Agent │ │
+     │   │  Kibana         │    │  + Sysmon      │ │
+     │   │  Fleet Server   │    │                │ │
+     │   └─────────────────┘    └───────────────┘ │
+     │        stores + detects      generates logs │
+     └─────────────────────────────────────────────┘
+
+  Endpoint generates telemetry → Agent ships it → Fleet receives →
+  Elasticsearch stores/indexes → Kibana searches + runs detection rules.
 ```
 
-## Ground rules you set for yourself
+**Telemetry collected:** Sysmon (process creation, registry, network), Windows Security log, Windows System log, PowerShell logging.
 
-- **No copy-paste of detection or tool code from an AI.** Infra config (Docker, Sysmon XML) may start from an annotated skeleton; everything you're meant to learn, you write.
-- **Commit after every phase.** A messy, honest git history is itself evidence you did the work.
-- **Every phase produces a write-up.** If you can't explain it, you haven't learned it.
+---
 
-## Safety
+## Detection coverage
 
-This lab generates and replays real malware-adjacent telemetry and runs offensive tooling (Kali, Atomic Red Team). Keep it on an **isolated host-only network**. Never point attack tools at anything you don't own. Details in Phase 0.
+10 detections mapped across the early intrusion lifecycle:
+
+| Tactic | Detections |
+|--------|------------|
+| Credential Access | Brute-force failed logons (T1110) |
+| Execution | Encoded PowerShell (T1059.001), Shell-from-PowerShell lineage (T1059.003) |
+| Defense Evasion | Mshta LOLBin (T1218.005), Event log cleared (T1070.001) |
+| Discovery | Host reconnaissance burst (T1082) |
+| Command & Control | Certutil download cradle (T1105) |
+| Persistence | Run-key (T1547.001), New service (T1543.003), New local account (T1136.001) |
+
+Includes both **signature-style** rules (name/command-line matches) and **behavioural** rules (process parent-child lineage), plus **threshold** rules that aggregate bursts into single alerts.
+
+➡️ Full logic, test triggers, and evasion notes: **[`detections/README.md`](detections/README.md)**
+
+---
+
+## Tech stack
+
+`VMware Fusion` · `Ubuntu Server` · `Docker` · `Elastic Stack (Elasticsearch / Kibana / Fleet)` · `Windows 11` · `Sysmon` · `Windows Event Log` · `PowerShell` · `KQL` · `MITRE ATT&CK` · `Git`
+
+---
+
+## Repository layout
+
+```
+detections/   Exported detection rules (NDJSON) + documented catalog
+infra/        Infrastructure build notes (VMs, networking, Elastic, endpoint telemetry)
+guide/        Step-by-step build guide per phase
+tools/        (Roadmap) Python SOC tooling — log parsing, IOC enrichment, hunting
+writeups/     (Roadmap) Attack → detect write-ups
+```
+
+---
+
+## Roadmap
+
+- [x] **Phase 0–1** — Isolated lab + endpoint telemetry design
+- [x] **Phase 2** — Elastic SIEM deployed, endpoint logs ingested end-to-end
+- [x] **Phase 3** — 10 ATT&CK-mapped detections built, validated, documented as code
+- [ ] **Phase 4–6** — Python tooling (log parser, IOC enrichment, SIEM hunter) with tests
+- [ ] **Phase 7–8** — Network visibility; attack-dataset replay
+- [ ] **Phase 9–10** — Detection-as-code CI; mini-SOAR automation
+- [ ] **Phase 11** — Microsoft Sentinel / KQL cloud track
+- [ ] **Phase 12** — Portfolio polish
+
+---
+
+## Notes
+
+The lab runs entirely inside isolated VMs; all adversary simulation is benign and self-contained. Built and maintained as a personal project to develop and demonstrate hands-on SOC / detection-engineering skills.
