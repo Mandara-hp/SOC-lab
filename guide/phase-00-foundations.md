@@ -42,7 +42,7 @@ Install, via the terminal, in this order. (These are environment-setup commands,
 
 1. On GitHub, create a **private** repo named `soc-lab`. (Keep it private until Phase 12, when you polish and make it public — you don't want half-finished work judged.)
 2. Clone it to the Mac.
-3. Create the directory skeleton from the README's "Repo layout" section (`guide/`, `infra/`, `detections/`, `tools/`, `writeups/`, `datasets/`, `evidence/`).
+3. Create the directory skeleton from the README's "Repo layout" section (`guide/`, `infra/`, `detections/`, `writeups/`).
 4. Add a `.gitignore` that excludes at least: `datasets/`, VM files, `.env` and any secrets, `__pycache__/`, `.venv/`, OS cruft (`.DS_Store`).
 5. Add this guide's files into `guide/` (you'll receive them as they're written).
 6. **First commit:** message `chore: initial repo skeleton`. Push it.
