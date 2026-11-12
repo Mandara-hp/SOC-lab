@@ -96,3 +96,8 @@ writeups/     (Roadmap) Attack → detect write-ups
 ## Notes
 
 The lab runs entirely inside isolated VMs; all adversary simulation is benign and self-contained. Built and maintained as a personal project to develop and demonstrate hands-on SOC / detection-engineering skills.
+---
+
+## Related project
+
+**[Network Traffic Analysis Portfolio](https://github.com/Mandara-hp/network_traffic_analysis)**: five PCAP investigations with Wireshark/tshark (NetSupport RAT C2, malvertising → PowerShell C2 → TeamViewer + shellcode, port scans, DNS exfiltration, and false-positive testing against a clean baseline). Each case ends with Suricata/SIEM detection ideas, groundwork for **Phase 7–8 (network visibility)** of this lab.
