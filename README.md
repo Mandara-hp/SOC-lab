@@ -6,6 +6,8 @@ Built end-to-end on a single Apple-Silicon laptop using virtualised, isolated in
 
 > **Status:** SIEM live, endpoint instrumented, 10 detections built, documented, and version-controlled. Python tooling and cloud/Sentinel coverage on the roadmap.
 
+![Detections firing in Elastic Security](evidence/phase3/alerts-firing.png)
+
 ---
 
 ## What's in here
