@@ -73,7 +73,6 @@ Includes both **signature-style** rules (name/command-line matches) and **behavi
 detections/   Exported detection rules (NDJSON) + documented catalog
 infra/        Infrastructure build notes (VMs, networking, Elastic, endpoint telemetry)
 guide/        Step-by-step build guide per phase
-tools/        (Roadmap) Python SOC tooling — log parsing, IOC enrichment, hunting
 writeups/     (Roadmap) Attack → detect write-ups
 ```
 
