@@ -6,6 +6,8 @@ Built end-to-end on a single Apple-Silicon laptop using virtualised, isolated in
 
 > **Status:** SIEM live, endpoint instrumented, 10 detections built, documented, and version-controlled. Python tooling and cloud/Sentinel coverage on the roadmap.
 
+📝 **Read the write-up:** [Building a SIEM Detection Lab — and Ten Detections That Actually Fire](writeups/building-a-detection-lab.md)
+
 ![Detections firing in Elastic Security](evidence/phase3/alerts-firing.png)
 
 ---
@@ -75,7 +77,7 @@ Includes both **signature-style** rules (name/command-line matches) and **behavi
 detections/   Exported detection rules (NDJSON) + documented catalog
 infra/        Infrastructure build notes (VMs, networking, Elastic, endpoint telemetry)
 guide/        Step-by-step build guide per phase
-writeups/     (Roadmap) Attack → detect write-ups
+writeups/     Write-up: building the lab and three detections explained
 ```
 
 ---
